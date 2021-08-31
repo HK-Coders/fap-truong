@@ -12,7 +12,8 @@ import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
 
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import Login from 'containers/Login/Loadable'
+import Login from 'containers/Login/Loadable';
+import DeskTop from 'containers/DeskTop/Loadable'
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 
@@ -39,6 +40,7 @@ export default function App() {
       {/* <Header /> */}
       <Switch>
         <Route exact path="/" component={Login} />
+        <Route path="/desktop" component={DeskTop} />
         <Route path="" component={NotFoundPage} />
       </Switch>
       {/* <Footer /> */}

@@ -1,10 +1,10 @@
 /**
  *
- * Login
+ * Information
  *
  */
 
-import React, { memo, useEffect } from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -14,44 +14,32 @@ import { compose } from 'redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectLogin from './selectors';
+import makeSelectInformation from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
-import GoogleLogin from 'react-google-login';
-import SignIn from './component/index';
-import BackGround from "../../images/bg.jpg";
-import { GetCampus } from './actions';
 
-export function Login(props) {
-  useInjectReducer({ key: 'login', reducer });
-  useInjectSaga({ key: 'login', saga });
-
-  const { login, dispatch } = props;
-
-  useEffect(() => {
-    dispatch(GetCampus());
-  }, []);
+export function Information() {
+  useInjectReducer({ key: 'information', reducer });
+  useInjectSaga({ key: 'information', saga });
 
   return (
-    <div >
+    <div>
       <Helmet>
-        <title>Login</title>
-        <meta name="description" content="Description of Login" />
+        <title>Information</title>
+        <meta name="description" content="Description of Information" />
       </Helmet>
-      {/* <FormattedMessage {...messages.header} /> */}
-
-      <SignIn />
+      <FormattedMessage {...messages.header} />
     </div>
   );
 }
 
-Login.propTypes = {
+Information.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
-  login: makeSelectLogin(),
+  information: makeSelectInformation(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -68,4 +56,4 @@ const withConnect = connect(
 export default compose(
   withConnect,
   memo,
-)(Login);
+)(Information);
