@@ -21,8 +21,12 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import makeSelectLogin from '../selectors';
 import { connect } from 'react-redux';
-import { SignIn1 } from '../actions';
+import { Reset, SignIn1 } from '../actions';
 import { useHistory } from 'react-router-dom';
+import Paper from '@material-ui/core/Paper';
+import Back from '../../../images/fpt.jpg';
+import { getUser } from '../../../utils/constants';
+import Alert from '@material-ui/lab/Alert';
 
 
 function Copyright() {
@@ -39,8 +43,40 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+  // paper: {
+  //   marginTop: theme.spacing(8),
+  //   display: 'flex',
+  //   flexDirection: 'column',
+  //   alignItems: 'center',
+  // },
+  // avatar: {
+  //   margin: theme.spacing(1),
+  //   backgroundColor: theme.palette.secondary.main,
+  // },
+  // form: {
+  //   width: '100%', // Fix IE 11 issue.
+  //   marginTop: theme.spacing(1),
+  // },
+  // submit: {
+  //   margin: theme.spacing(3, 0, 2),
+  // },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: '100%',
+  },
+  root: {
+    height: '100vh',
+  },
+  image: {
+    backgroundImage: `url(${Back})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundColor:
+      theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
   paper: {
-    marginTop: theme.spacing(8),
+    margin: theme.spacing(8, 4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -56,13 +92,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: '100%',
-  },
-  all: {
 
-  }
 }));
 
 function SignIn(props) {
@@ -70,10 +100,20 @@ function SignIn(props) {
 
 
   const { login, dispatch } = props;
-  const { listCampus, loginSuccess } = login;
+  const { listCampus, loginSuccess, message } = login;
+
+  console.log(message)
 
   const [campus, setCampus] = useState("");
   const [token, setToken] = useState("");
+  const [messageAlert, setMessageAlert] = useState("");
+  const [visible, setVisible] = useState(false);
+  const history = useHistory();
+  const user = getUser();
+
+  if (user) {
+    history.push("/desktop");
+  }
 
   const responseGoogle = (response) => {
     setToken(response.tokenObj.id_token);
@@ -90,65 +130,136 @@ function SignIn(props) {
     }
   }, [token]);
 
-  const history = useHistory();
-
   useEffect(() => {
     if (loginSuccess.AuthenKey) {
       history.push("/desktop");
     }
 
   }, [loginSuccess]);
+
+  useEffect(() => {
+    if (message !== "") {
+      setMessageAlert(message);
+      setVisible(true);
+      setTimeout(() =>
+        setVisible(false), 10000
+      );
+    }
+  }, [message]);
+
   console.log(loginSuccess)
+  console.log(token)
 
   return (
-    <Container component="main" maxWidth="xs">
+    // <Container component="main" maxWidth="xs">
+    //   <CssBaseline />
+    //   <div className={classes.paper}>
+    //     <Avatar className={classes.avatar}>
+    //       <LockOutlinedIcon />
+    //     </Avatar>
+    //     <Typography component="h1" variant="h5">
+    //       Sign in
+    //     </Typography>
+    //     <form className={classes.form} noValidate>
+    //       <div className="row">
+    //         <div className="col-sm-7">
+    //           <FormControl variant="outlined" className={classes.formControl}>
+    //             <InputLabel htmlFor="outlined-age-native-simple">Select Campus</InputLabel>
+    //             <Select
+    //               native
+    //               value={campus}
+    //               onChange={(e) => setCampus(e.target.value)}
+    //               label="campus"
+    //               inputProps={{
+    //                 name: 'campus',
+    //                 id: 'outlined-age-native-simple',
+    //               }}
+    //             >
+    //               <option aria-label="None" value="" />
+    //               {listCampus.map((item) =>
+    //                 <option key={item.CampusCode} value={item.CampusCode}>{item.CampusName}</option>
+    //               )}
+    //             </Select>
+    //           </FormControl>
+    //         </div>
+    //         <div className="col-sm-5" style={{ paddingTop: "15px" }}>
+    //           <GoogleLogin
+    //             clientId="525769427042-2vrp9m5sfv6g8fb03fdl2dm1ddv1q03r.apps.googleusercontent.com"
+    //             buttonText="Đăng nhập"
+    //             onSuccess={responseGoogle}
+    //             onFailure={responseGoogle}
+    //             cookiePolicy={'single_host_origin'}
+    //             isSignedIn={true}
+    //           />
+    //         </div>
+    //       </div>
+    //     </form>
+    //   </div>
+    //   <Box mt={8}>
+    //     <Copyright />
+    //   </Box>
+
+
+    // </Container>
+
+    <Grid container component="main" className={classes.root}>
       <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate>
-          <div className="row">
-            <div className="col-sm-7">
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel htmlFor="outlined-age-native-simple">Select Campus</InputLabel>
-                <Select
-                  native
-                  value={campus}
-                  onChange={(e) => setCampus(e.target.value)}
-                  label="campus"
-                  inputProps={{
-                    name: 'campus',
-                    id: 'outlined-age-native-simple',
-                  }}
-                >
-                  <option aria-label="None" value="" />
-                  {listCampus.map((item) =>
-                    <option key={item.CampusCode} value={item.CampusCode}>{item.CampusName}</option>
-                  )}
-                </Select>
-              </FormControl>
+      <Grid item xs={false} sm={3} md={9} className={classes.image} />
+      <Grid item xs={12} sm={9} md={3} component={Paper} elevation={6} square>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form className={classes.form} noValidate>
+            <div className="row">
+              <div className="col-sm-7">
+                <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor="campus-native-simple">Select Campus</InputLabel>
+                  <Select
+                    native
+                    value={campus}
+                    onChange={(e) => setCampus(e.target.value)}
+                    label="campus"
+                    inputProps={{
+                      name: 'campus',
+                      id: 'campus-native-simple',
+                    }}
+                  >
+                    <option aria-label="None" value="" />
+                    {listCampus.map((item) =>
+                      <option key={item.CampusCode} value={item.CampusCode}>{item.CampusName}</option>
+                    )}
+                  </Select>
+                </FormControl>
+
+
+              </div>
+              <div className="col-sm-5" style={{ paddingTop: "15px" }}>
+                <GoogleLogin
+                  clientId="525769427042-2vrp9m5sfv6g8fb03fdl2dm1ddv1q03r.apps.googleusercontent.com"
+                  buttonText="Đăng nhập"
+                  onSuccess={responseGoogle}
+                  onFailure={responseGoogle}
+                  cookiePolicy={'single_host_origin'}
+                //isSignedIn={true}
+                />
+              </div>
             </div>
-            <div className="col-sm-5" style={{ paddingTop: "15px" }}>
-              <GoogleLogin
-                clientId="525769427042-2vrp9m5sfv6g8fb03fdl2dm1ddv1q03r.apps.googleusercontent.com"
-                buttonText="Đăng nhập"
-                onSuccess={responseGoogle}
-                onFailure={responseGoogle}
-                cookiePolicy={'single_host_origin'}
-                isSignedIn={true}
-              />
-            </div>
-          </div>
-        </form>
-      </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
-    </Container>
+          </form>
+        </div>
+        {visible &&
+          <Alert variant="filled" severity="error" style={{ width: "80%", margin: "0 auto" }}>
+            {messageAlert}
+          </Alert>
+        }
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </Grid>
+    </Grid>
   );
 }
 

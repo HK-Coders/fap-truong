@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -19,10 +19,18 @@ import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 import DeskTopComponent from './component/index';
+import { getImage } from './actions';
 
-export function DeskTop() {
+export function DeskTop(props) {
+
+  const {dispatch} = props;
+
   useInjectReducer({ key: 'deskTop', reducer });
   useInjectSaga({ key: 'deskTop', saga });
+
+  useEffect(() => {
+    dispatch(getImage());
+  }, []);
 
   return (
     <div>

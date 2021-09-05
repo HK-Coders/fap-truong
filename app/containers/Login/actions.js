@@ -53,3 +53,9 @@ export function GetCampusFailed(payload) {
     payload
   }
 }
+
+export function Reset() {
+  return {
+    type: types.RESET
+  }
+}

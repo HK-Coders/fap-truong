@@ -14,25 +14,4 @@ export const GET_CAMPUS = 'app/Login/GET_CAMPUS';
 export const GET_CAMPUS_SUCCESS = 'app/Login/GET_CAMPUS_SUCCESS';
 export const GET_CAMPUS_FAILED = 'app/Login/GET_CAMPUS_FAILED';
 
-export const Campus = [
-    {
-        value: "APHL",
-        label: "FU-Hòa Lạc"
-    },
-    {
-        value: "1",
-        label: "FU-Hồ Chí Minh"
-    },
-    {
-        value: "2",
-        label: "FU-Đà Nẵng"
-    },
-    {
-        value: "3",
-        label: "FU-Cần Thơ"
-    },
-    {
-        value: "4",
-        label: "FU-Quy Nhơn"
-    }
-]
+export const RESET = 'app/Login/RESET';

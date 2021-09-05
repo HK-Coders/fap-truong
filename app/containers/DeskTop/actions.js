@@ -4,10 +4,31 @@
  *
  */
 
-import { DEFAULT_ACTION } from './constants';
+import * as types from './constants';
 
 export function defaultAction() {
   return {
-    type: DEFAULT_ACTION,
+    type: types.DEFAULT_ACTION,
   };
+}
+
+export function getImage(payload) {
+  return {
+    type: types.GET_IMAGE,
+    payload
+  };
+}
+
+export function getImageSuccess(payload) {
+  return {
+    type: types.GET_IMAGE_SUCCESS,
+    payload
+  }
+}
+
+export function getImageFailed(payload) {
+  return {
+    type: types.GET_IMAGE_FAILED,
+    payload
+  }
 }

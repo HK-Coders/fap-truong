@@ -28,6 +28,16 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import makeSelectDeskTop from '../selectors';
+import { getUser, removeUser, timeout } from '../../../utils/constants';
+import { Reset } from '../../Login/actions';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Icon from '@material-ui/core/Icon';
+import Bg from '../../../images/fptu.jpg';
+import quan from '../../../images/quan.jpg';
+import duyminh from '../../../images/duyminh.jpg';
+import Avatar from '@material-ui/core/Avatar';
 
 const drawerWidth = 240;
 
@@ -91,14 +101,64 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  test: {
+    flexGrow: 1,
+  },
+  button: {
+    //margin: theme.spacing(1),
+    width: '100%',
+    backgroundColor: "orange",
+    margin: "10px",
+  },
+  paper: {
+    width: '80%'
+  },
+  content1: {
+    marginTop: "2rem",
+    backgroundImage: `url(${Bg})`,
+    height: "500px",
+    width: "100%",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    position: "relative",
+    opacity: "1"
+  },
+  insideContent1: {
+    position: "absolute",
+    textAlign: "center",
+    color: "black",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "#ddd",
+    opacity: "0.7"
+  },
+  avatar: {
+    width: theme.spacing(20),
+    height: theme.spacing(20),
+    margin: "5px auto"
+  } 
 }));
 
-function DeskTopComponent() {
+function DeskTopComponent(props) {
+
+  const { deskTop, dispatch } = props;
+  const { imageTest } = deskTop;
+
+  console.log(imageTest)
+
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [index, setIndex] = useState(0);
   const history = useHistory();
+  const user = getUser();
+
+  if (user) {
+    //timeout();
+    console.log(user);
+  } else history.push('/');
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -110,12 +170,15 @@ function DeskTopComponent() {
 
 
   const logout = () => {
-    history.push("/");
+    removeUser();
+    dispatch(Reset());
+    history.push('/');
   }
 
   const changeDesk = (index) => {
     setIndex(index);
   }
+
 
   return (
     <div className={classes.root}>
@@ -125,6 +188,8 @@ function DeskTopComponent() {
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
+
+        style={{ backgroundImage: "linear-gradient(to right, #1066AA, #EA6E26, #15AB49)" }}
       >
         <Toolbar>
           <IconButton
@@ -136,14 +201,24 @@ function DeskTopComponent() {
               [classes.hide]: open,
             })}
           >
-            <MenuIcon />
+            {/* <MenuIcon /> */}
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography variant="h6" noWrap className={classes.test}>
             Fap Truong
           </Typography>
+          <Typography style={{ marginRight: "10px" }} variant="h6" noWrap>
+            <p>Hello, <br /> {localStorage.getItem("name")}</p>
+          </Typography>
+
+          <GoogleLogout
+            clientId="525769427042-2vrp9m5sfv6g8fb03fdl2dm1ddv1q03r.apps.googleusercontent.com"
+            buttonText="Đăng xuất"
+            onLogoutSuccess={logout}
+
+          />
         </Toolbar>
       </AppBar>
-      <Drawer
+      {/* <Drawer
         variant="permanent"
         className={clsx(classes.drawer, {
           [classes.drawerOpen]: open,
@@ -184,17 +259,103 @@ function DeskTopComponent() {
             </ListItem>
           ))}
         </List>
-      </Drawer>
+      </Drawer> */}
       <main className={classes.content}>
+        <div className={classes.content1}>
+          <div className={classes.insideContent1}>
+            <p style={{ fontSize: "40px" }}>FAP TRUONG</p>
+            <p style={{ fontSize: "20px" }}>Hi, this tool is made by FPT University's Student. It is created to help students learning at FPT University
+              control their learing status easier</p>
+          </div>
+        </div>
         <div className={classes.toolbar} />
-        {index === 0 ?
+
+        <div style={{ textAlign: "center" }}>
+          <p style={{ fontSize: "30px", fontWeight: "bold" }}>Main Features</p>
+        </div>
+        <div style={{ marginBottom: "1rem" }}>
+          <Grid container spacing={3}>
+            <Grid item xs={4}>
+              <Button
+                variant="contained"
+                className={classes.button}
+                endIcon={<DescriptionIcon />}
+              >
+                Semester Mark Report
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                variant="contained"
+                className={classes.button}
+                endIcon={<DescriptionIcon />}
+              >
+                Academic Transcript &amp; GPA
+              </Button>
+            </Grid>
+            <Grid item xs={4}>
+              <Button
+                variant="contained"
+                className={classes.button}
+                endIcon={<TodayIcon />}
+              >
+                Semester Timetable
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <p style={{ fontSize: "30px", fontWeight: "bold" }}>About Us</p>
+        </div>
+        <div>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+            <Avatar className={classes.avatar} alt="Hoang Duy Minh" src={duyminh} />
+              <div style={{ textAlign: "center" }}>Em minh</div>
+            </Grid>
+            <Grid style={{ textAlign: "center" }} item xs={6}>
+              <Avatar className={classes.avatar} alt="Nguyen Anh Quan" src={quan} />
+              <div >Em quan</div>
+            </Grid>
+          </Grid>
+        </div>
+        {/* {index === 0 ?
           <>
-            <Typography paragraph>
-              User Information
-            </Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={4}>
+                <Paper className={classes.paper}>Noti</Paper>
+              </Grid>
+              <Grid item xs={8} style={{ textAlign: "center", borderLeft: "1px solid black" }}>
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  endIcon={<DescriptionIcon />}
+                >
+                  Semester Mark Report
+                </Button>
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  endIcon={<DescriptionIcon />}
+                >
+                  Academic Transcript &amp; GPA
+                </Button>
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  endIcon={<TodayIcon />}
+                >
+                  Semester Timetable
+                </Button>
+
+              </Grid>
+            </Grid>
+
+
           </> : null
-        }
-        {index === 1 ?
+        } */}
+
+        {/* {index === 1 ?
           <>
             <Typography paragraph>
               Semester Mark Report
@@ -214,10 +375,10 @@ function DeskTopComponent() {
               Timetable
             </Typography>
           </> : null
-        }
+        } */}
 
-      </main>
-    </div>
+      </main >
+    </div >
   );
 }
 
